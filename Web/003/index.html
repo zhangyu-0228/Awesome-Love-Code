@@ -1,31 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
     <title>一封情书</title>
     <link rel="icon" type="image/x-icon" href="https://i.loli.net/2021/06/03/lFg2V4WUcmkB98G.png">
-    <meta name="language" content="zh-CN">
-    <meta name="title" content="小孙同学">
-    <meta name="github" content="https://github.com/sun0225SUN/Awesome-Love-Code">
-    <meta name="describe" content="收集不易，您的star是我坚持的动力，同时也欢迎各位PR哦! ">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link type="text/css" rel="stylesheet" href="./Love_files/default.css">
-    <script type="text/javascript" src="./Love_files/jquery.min.js"></script>
-    <script type="text/javascript" src="./Love_files/jscex.min.js"></script>
-    <script type="text/javascript" src="./Love_files/jscex-parser.js"></script>
-    <script type="text/javascript" src="./Love_files/jscex-jit.js"></script>
-    <script type="text/javascript" src="./Love_files/jscex-builderbase.min.js"></script>
-    <script type="text/javascript" src="./Love_files/jscex-async.min.js"></script>
-    <script type="text/javascript" src="./Love_files/jscex-async-powerpack.min.js"></script>
-    <script type="text/javascript" src="./Love_files/functions.js" charset="utf-8"></script>
-    <script type="text/javascript" src="./Love_files/love.js" charset="utf-8"></script>
-
+    <script src="./Love_files/jquery.min.js"></script>
+    <script src="./Love_files/jscex.min.js"></script>
+    <script src="./Love_files/jscex-parser.js"></script>
+    <script src="./Love_files/jscex-jit.js"></script>
+    <script src="./Love_files/jscex-builderbase.min.js"></script>
+    <script src="./Love_files/jscex-async.min.js"></script>
+    <script src="./Love_files/jscex-async-powerpack.min.js"></script>
+    <script src="./Love_files/functions.js" charset="utf-8"></script>
+    <script src="./Love_files/love.js" charset="utf-8"></script>
 </head>
-
 <body>
     <div id="main">
-        <div id="error">亲，您使用的浏览器无法支持即将显示的内容，请换成谷歌(<a
-                href="http://www.google.cn/chrome/intl/zh-CN/landing_chrome.html?hl=zh-CN&brand=CHMI">Chrome</a>)或者火狐(<a
-                href="http://firefox.com.cn/download/">Firefox</a>)浏览器哟~</div>
+        <div id="error">亲，您使用的浏览器无法支持即将显示的内容，请换成谷歌(<a href="http://www.google.cn/chrome/intl/zh-CN/landing_chrome.html?hl=zh-CN&brand=CHMI">Chrome</a>)或者火狐(<a href="http://firefox.com.cn/download/">Firefox</a>)浏览器哟~</div>
         <div id="wrap">
             <div id="text">
                 <div id="code">
@@ -48,22 +41,21 @@
                     <span class="say">用行动告诉你，爱不是说说而已</span><br>
                     <span class="say">是一生一世的坚定和珍惜</span><br>
                     <span class="say">你曾经走过的路我没能陪你</span><br>
-                    <span class="say">但你接下来的每一步，我都想牵着你一起走</span><br>
-                    <br>
+                    <span class="say">但你接下来的每一步，我都想牵着你一起走</span><br><br>
                     <span class="say"><span class="space"></span></span>
                 </div>
             </div>
             <div id="clock-box">
-                <a href="https://sunguoqi.com" target="_blank">阿肉</a> 和 <a href="https://sunguoqi.com"
-                    target="_blank">海江</a> 相识的
+                <a href="https://sunguoqi.com" target="_blank">阿肉</a> 和 
+                <a href="https://sunguoqi.com" target="_blank">海江</a> 相识的
                 <div id="clock"></div>
             </div>
             <canvas id="canvas" width="1100" height="680"></canvas>
         </div>
-
     </div>
 
-    <audio preload="auto" autoplay="" id="media" src="love.mp3" autoplay preload loop="loop"></audio>
+    <!-- 背景音乐 -->
+    <audio id="media" src="love.mp3" muted autoplay loop></audio>
 
     <script>
         (function () {
@@ -125,6 +117,21 @@
                 var offset = canvas.offset(), x, y;
                 x = e.pageX - offset.left;
                 y = e.pageY - offset.top;
+
+                // 点击播放音乐（跨浏览器兼容）
+                var media = document.getElementById("media");
+                if (media) {
+                    media.muted = false;
+                    var playPromise = media.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(function () {
+                            console.log("音乐播放成功");
+                        }).catch(function (err) {
+                            console.warn("音乐播放失败：", err);
+                        });
+                    }
+                }
+
                 if (seed.hover(x, y)) {
                     hold = 0;
                     canvas.unbind("click");
@@ -177,7 +184,6 @@
                 foot.draw();
                 tree.snapshot("p2", 500, 0, 610, 680);
 
-                // 会有闪烁不得意这样做, (＞﹏＜)
                 canvas.parent().css("background", "url(" + tree.toDataURL('image/png') + ")");
                 canvas.css("background", "#ffc0cb");
                 $await(Jscex.Async.sleep(300));
@@ -185,7 +191,6 @@
             }));
 
             var jumpAnimate = eval(Jscex.compile("async", function () {
-                var ctx = tree.ctx;
                 while (true) {
                     tree.ctx.clearRect(0, 0, width, height);
                     tree.jump();
@@ -215,18 +220,12 @@
                 $await(growAnimate());
                 $await(flowAnimate());
                 $await(moveAnimate());
-
                 textAnimate().start();
-
                 $await(jumpAnimate());
             }));
 
             runAsync().start();
         })();
     </script>
-
-
-
 </body>
-
 </html>
